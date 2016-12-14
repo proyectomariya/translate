@@ -7,7 +7,7 @@ El habla es un fenómeno complejo y la gente rara vez entiende cómo se produce 
 
 Todas las descripciones modernas del habla son probabílisticas. Esto significa que no hay ciertos limites entre unidades o entre palabras. La traducción del habla al texto y otras aplicaciones de habla nunca son 100% correctas. Esa idea es bastante inusual para los desarrolladores de software, que normalmente trabajamos con sistemas deterministicos. Y crea una gran cantidad de problemas especificos solo para la tecnologia del habla.
 
-Estructura:
+*Estructura*:
 
 En la practica actual, la estructura del habla es la siguiente:
 
@@ -23,6 +23,18 @@ Para fines computacionales, es util detectar partes de tritonos en lugar de trit
 
 A continución, los tonos crean sub-palabras, como silabas. A veces, las silabas se definen como "entidades reductoras estables". Para entender mejor, cuado el habla se vuelve rápido, los tonos suelen cambiar, pero las silabas siguen siendo las mismas. Además, las silabas están relacionadas con el contorno intonacional.  Las sub palabras regularmente se usan en el reconocimiento del habla de vocabulario abierto.
 
-Las subpalabras forman palabras. Las palabras son importantes en el reconocimiento del habla por que restringen las combinaciones de tonos de manera significativa. Si hay 40 tonos y una palabra promedio tiene 7 tonos, debe haber 40 al 7 palabras. Afortunadamente, incluso una persona muy educada rara vez usa mas de 10 mil palabras  en su practica, lo que hace que el reconocimiento sea mas factible.
+Las subpalabras forman palabras. Las palabras son importantes en el reconocimiento del habla por que restringen las combinaciones de tonos de manera significativa. Si hay 40 tonos y una palabra promedio tiene 7 tonos, debe haber 40^7 palabras. Afortunadamente, incluso una persona muy educada rara vez usa mas de 10 mil palabras  en su practica, lo que hace que el reconocimiento sea mas factible.
 
 Las palabras y otros sonidos no linguisticos, se llaman rellenos (respiracion, umm, uhh, tos, estornudos), estos forman declaraciones. Son trozos separados de audio entre pausas. No necesariamente coinciden con frases, que son mas conceptos semánticos.
+
+*Proceso de reconocimiento*:
+
+La manera comun de reconocer el habla es la siguiente: tomamos la forma de onda, la dividimos en enunciados por silencios y tratamos de reconocer lo que se dice en cada enunciado. Para hacer esto tenemos que tomar todas las combinaciones posibles de palabras e intentar emparejarlas con el audio, despues elegimos la mejor combinación.
+
+Hay que checar cosas importantes cuando tratamos de emparejar:
+
+Primero que todo esto es un concepto de características. Dado que el número de parámetros es grande, hay que tratar de optimizar. Con números que se calculan a partir del habla usualmente dividiendo el habla en los fotogramas. Luego, para cada trama de longitud tipicamente 10 milisegundos, extraemos 39 numeros que representen el habla, eso se llama vector de caracteristicas. La forma de generar numeros es un tema de investigación activa. pero en el caso simple es una derivada.
+
+En segundo lugar es un concepto de modelo. El modelo describe algún objeto matemático que reúne atributos comunes de la palabra hablada. En la practica, para el modelo de audio de senones es una mezcla gaussiana de sus tres estados - para decirlo mas simple, es un vector de caracteristicas mas probables. A partir del concepto de modelo se plantean las siguientes cuestiones: ¿que tan bueno se adapta el modelo a la practica? ¿el modelo puede ser mejor que los problemas internos del modelo? ¿que tan flexible es el modelo cuando hay un cambio de condiciones?
+
+El modelo de lenguaje se llama Hidden Markov Model o HMM, es un modelo genérico que describe el cana de comunicación black-box. En este modelo el proceso se describe como una secuencia de estados que se cambian entre si con cierta probabilidad. Este modelo pretende describir cualquier proceso secuencial como el habla, y se ha demostrado que es realmente práctico para la de descodificación del habla,
